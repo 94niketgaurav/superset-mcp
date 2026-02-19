@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superset Chatbot Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 40px;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .demo-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #1FA8C9;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        code {
+            background: #f0f0f0;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', monospace;
+        }
+
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status.connected {
+            background: #e6f7ed;
+            color: #1a7f4b;
+        }
+
+        .status.disconnected {
+            background: #ffeae6;
+            color: #c23934;
+        }
+
+        .instructions {
+            background: #f8fcfd;
+            border-left: 4px solid #1FA8C9;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .instructions h3 {
+            margin-top: 0;
+            color: #1FA8C9;
+        }
+
+        ol, ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .arrow {
+            color: #1FA8C9;
+            font-size: 24px;
+            text-align: center;
+            padding: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-content">
+        <h1>Superset Query Assistant</h1>
+        <p class="subtitle">Natural language queries for your Superset data</p>
+
+        <div class="card">
+            <h2>Status</h2>
+            <p>
+                API Server:
+                <span class="status" id="api-status">Checking...</span>
+            </p>
+            <p>
+                Click the chat button in the bottom-right corner to start querying!
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>How It Works</h2>
+            <div class="instructions">
+                <h3>1. Ask a Question</h3>
+                <p>Type a natural language query like:</p>
+                <ul>
+                    <li>"Show me total assets per user"</li>
+                    <li>"Count events by type this month"</li>
+                    <li>"Top 10 users by activity"</li>
+                </ul>
+            </div>
+
+            <div class="arrow">&#8595;</div>
+
+            <div class="instructions">
+                <h3>2. Review & Select</h3>
+                <p>The assistant will:</p>
+                <ul>
+                    <li>Identify relevant tables from your trained schema</li>
+                    <li>Suggest appropriate joins</li>
+                    <li>Generate SQL using AI</li>
+                </ul>
+            </div>
+
+            <div class="arrow">&#8595;</div>
+
+            <div class="instructions">
+                <h3>3. Execute in SQL Lab</h3>
+                <p>Choose to:</p>
+                <ul>
+                    <li><strong>Execute & Save</strong> - Run the query and save to SQL Lab</li>
+                    <li><strong>Save Only</strong> - Save without executing</li>
+                    <li><strong>Get URL</strong> - Get a link to open in SQL Lab</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Quick Start</h2>
+            <p><strong>1. Start the API server:</strong></p>
+            <pre><code>cd chatbot
+python api_server.py</code></pre>
+
+            <p><strong>2. Open this demo page in your browser</strong></p>
+
+            <p><strong>3. Click the chat button and start querying!</strong></p>
+        </div>
+
+        <div class="card">
+            <h2>Integration with Superset</h2>
+            <p>To add this chatbot to your Superset installation:</p>
+
+            <p><strong>Option 1: Browser Extension / Bookmarklet</strong></p>
+            <pre><code>javascript:(function(){
+  var s=document.createElement('script');
+  s.src='http://localhost:5050/static/widget.js';
+  s.onload=function(){SupersetChatbot.init({apiUrl:'http://localhost:5050'})};
+  document.body.appendChild(s);
+})();</code></pre>
+
+            <p><strong>Option 2: Superset Custom Template</strong></p>
+            <p>Add to your Superset's <code>templates/tail_js_custom_extra.html</code>:</p>
+            <pre><code>&lt;script src="http://your-chatbot-server:5050/static/widget.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  SupersetChatbot.init({ apiUrl: 'http://your-chatbot-server:5050' });
+&lt;/script&gt;</code></pre>
+        </div>
+    </div>
+
+    <!-- Load the chatbot widget -->
+    <script src="widget.js"></script>
+    <script>
+        // Initialize chatbot
+        SupersetChatbot.init({
+            apiUrl: 'http://localhost:5050'
+        });
+
+        // Check API status
+        async function checkApiStatus() {
+            const statusEl = document.getElementById('api-status');
+            try {
+                const response = await fetch('http://localhost:5050/api/health');
+                if (response.ok) {
+                    statusEl.textContent = 'Connected';
+                    statusEl.className = 'status connected';
+                } else {
+                    throw new Error('Not OK');
+                }
+            } catch (e) {
+                statusEl.textContent = 'Disconnected - Start the API server';
+                statusEl.className = 'status disconnected';
+            }
+        }
+
+        checkApiStatus();
+        setInterval(checkApiStatus, 5000);
+    </script>
+</body>
+</html>

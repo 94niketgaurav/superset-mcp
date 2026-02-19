@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  superset-mcp-chatbot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: superset-mcp-chatbot
+    ports:
+      - "5050:5050"
+    environment:
+      # Superset Connection
+      - SUPERSET_URL=${SUPERSET_URL:-http://localhost:8088}
+      - SUPERSET_USERNAME=${SUPERSET_USERNAME}
+      - SUPERSET_PASSWORD=${SUPERSET_PASSWORD}
+
+      # LLM API Keys
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+
+      # Server Config
+      - CHATBOT_PORT=5050
+      - FLASK_ENV=production
+      - ENGINE_HINT=${ENGINE_HINT:-starrocks}
+      - DEFAULT_DATABASE=${DEFAULT_DATABASE:-1}
+      - DEFAULT_SCHEMA=${DEFAULT_SCHEMA:-jeeves}
+
+      # LLM Config
+      - DEFAULT_LLM_PROVIDER=${DEFAULT_LLM_PROVIDER:-openai}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o}
+      - CLAUDE_MODEL=${CLAUDE_MODEL:-claude-sonnet-4-20250514}
+    volumes:
+      # Persist data and logs
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config
+      # Query logs for training
+      - ./query_logs:/app/query_logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5050/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

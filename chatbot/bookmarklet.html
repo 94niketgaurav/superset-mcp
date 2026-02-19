@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superset Chatbot - Bookmarklet Installation</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #1FA8C9;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #484848;
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .bookmarklet-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #1FA8C9 0%, #1A85A0 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(31, 168, 201, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: grab;
+        }
+
+        .bookmarklet-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(31, 168, 201, 0.5);
+        }
+
+        .bookmarklet-link:active {
+            cursor: grabbing;
+        }
+
+        .icon {
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .steps {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .steps li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 50px;
+            position: relative;
+        }
+
+        .steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 32px;
+            height: 32px;
+            background: #1FA8C9;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .steps li strong {
+            color: #1FA8C9;
+        }
+
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .note-title {
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 5px;
+        }
+
+        .code-block {
+            background: #f4f4f4;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .config-section {
+            margin-top: 30px;
+        }
+
+        .config-section label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #484848;
+        }
+
+        .config-section input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .config-section input:focus {
+            outline: none;
+            border-color: #1FA8C9;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #484848;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #333;
+        }
+
+        .footer {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+
+        .demo-section {
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+
+        .demo-btn {
+            display: inline-block;
+            background: white;
+            color: #1FA8C9;
+            padding: 12px 25px;
+            border: 2px solid #1FA8C9;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .demo-btn:hover {
+            background: #1FA8C9;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>
+                <span class="icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="#1FA8C9">
+                        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                        <circle cx="8" cy="10" r="1.5"/>
+                        <circle cx="12" cy="10" r="1.5"/>
+                        <circle cx="16" cy="10" r="1.5"/>
+                    </svg>
+                </span>
+                Superset Chatbot
+            </h1>
+            <p class="subtitle">A smart SQL assistant for Apache Superset - Ask questions in natural language, get SQL queries</p>
+
+            <h2>Installation</h2>
+
+            <ol class="steps">
+                <li>
+                    <strong>Drag this button</strong> to your browser's bookmarks bar:
+                    <div style="margin-top: 20px; text-align: center;">
+                        <a class="bookmarklet-link" id="bookmarklet" href="javascript:(function(){var a='http://localhost:5050';if(window.SupersetChatbot){window.SupersetChatbot.open();return}var s=document.createElement('script');s.src=a+'/static/widget.js';s.onload=function(){if(window.SupersetChatbot){window.SupersetChatbot.init({apiUrl:a});setTimeout(function(){window.SupersetChatbot.open()},100)}};s.onerror=function(){alert('Failed to load Superset Chatbot. Make sure the chatbot server is running at '+a)};document.head.appendChild(s)})();">
+                            <span class="icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                                    <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                                </svg>
+                            </span>
+                            SQL Chatbot
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <strong>Navigate to Superset</strong> in your browser (e.g., <code>http://localhost:8088</code>)
+                </li>
+                <li>
+                    <strong>Click the bookmarklet</strong> in your bookmarks bar to open the chatbot
+                </li>
+                <li>
+                    <strong>Start chatting!</strong> Ask questions like "Show me all users created last month"
+                </li>
+            </ol>
+
+            <div class="note">
+                <div class="note-title">Note</div>
+                Make sure the chatbot server is running at <code>http://localhost:5050</code> before using the bookmarklet.
+                <br>Start it with: <code>python chatbot/api_server.py</code>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Custom Configuration</h2>
+            <p>If your chatbot server runs on a different URL, update the configuration below:</p>
+
+            <div class="config-section">
+                <label for="apiUrl">Chatbot API URL</label>
+                <input type="text" id="apiUrl" value="http://localhost:5050" placeholder="http://localhost:5050">
+                <button class="btn" onclick="updateBookmarklet()">Update Bookmarklet</button>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <label>Bookmarklet Code (copy and paste into a bookmark URL):</label>
+                <div class="code-block" id="bookmarkletCode">javascript:(function(){var a='http://localhost:5050';if(window.SupersetChatbot){window.SupersetChatbot.open();return}var s=document.createElement('script');s.src=a+'/static/widget.js';s.onload=function(){if(window.SupersetChatbot){window.SupersetChatbot.init({apiUrl:a});setTimeout(function(){window.SupersetChatbot.open()},100)}};s.onerror=function(){alert('Failed to load Superset Chatbot. Make sure the chatbot server is running at '+a)};document.head.appendChild(s)})();</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Demo</h2>
+            <div class="demo-section">
+                <p style="margin-bottom: 15px;">Test the chatbot right here on this page:</p>
+                <button class="demo-btn" onclick="testChatbot()">Launch Chatbot Demo</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Features</h2>
+            <ul style="padding-left: 20px;">
+                <li><strong>Natural Language to SQL</strong> - Ask questions in plain English</li>
+                <li><strong>Smart Table Detection</strong> - Automatically identifies relevant tables</li>
+                <li><strong>Time Filter Support</strong> - Understands "last month", "this year", etc.</li>
+                <li><strong>Schema Awareness</strong> - Works with your database schemas</li>
+                <li><strong>Few-Shot Learning</strong> - Improves from your existing queries</li>
+                <li><strong>Direct SQL Lab Integration</strong> - Opens queries directly in Superset</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>Superset Chatbot - Powered by LLM Intelligence</p>
+        </div>
+    </div>
+
+    <script>
+        function updateBookmarklet() {
+            var apiUrl = document.getElementById('apiUrl').value.trim();
+            if (!apiUrl) {
+                alert('Please enter a valid API URL');
+                return;
+            }
+
+            // Remove trailing slash
+            if (apiUrl.endsWith('/')) {
+                apiUrl = apiUrl.slice(0, -1);
+            }
+
+            // Generate bookmarklet code
+            var code = "javascript:(function(){var a='" + apiUrl + "';" +
+                "if(window.SupersetChatbot){window.SupersetChatbot.open();return}" +
+                "var s=document.createElement('script');" +
+                "s.src=a+'/static/widget.js';" +
+                "s.onload=function(){if(window.SupersetChatbot){" +
+                "window.SupersetChatbot.init({apiUrl:a});" +
+                "setTimeout(function(){window.SupersetChatbot.open()},100)}};" +
+                "s.onerror=function(){alert('Failed to load Superset Chatbot. Make sure the chatbot server is running at '+a)};" +
+                "document.head.appendChild(s)})();";
+
+            // Update display
+            document.getElementById('bookmarkletCode').textContent = code;
+            document.getElementById('bookmarklet').href = code;
+
+            alert('Bookmarklet updated! Drag the button again to update your bookmark.');
+        }
+
+        function testChatbot() {
+            var apiUrl = document.getElementById('apiUrl').value.trim();
+            if (!apiUrl) apiUrl = 'http://localhost:5050';
+            if (apiUrl.endsWith('/')) apiUrl = apiUrl.slice(0, -1);
+
+            if (window.SupersetChatbot) {
+                window.SupersetChatbot.open();
+                return;
+            }
+
+            var script = document.createElement('script');
+            script.src = apiUrl + '/static/widget.js';
+            script.onload = function() {
+                if (window.SupersetChatbot) {
+                    window.SupersetChatbot.init({ apiUrl: apiUrl });
+                    setTimeout(function() {
+                        window.SupersetChatbot.open();
+                    }, 100);
+                }
+            };
+            script.onerror = function() {
+                alert('Failed to load Superset Chatbot. Make sure the chatbot server is running at ' + apiUrl);
+            };
+            document.head.appendChild(script);
+        }
+    </script>
+</body>
+</html>
